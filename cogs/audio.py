@@ -96,7 +96,7 @@ class AudioCommandMixin(AudioBase):
                 await ctx.guild.voice_client.disconnect(force=True)
                 self.connecting_guilds.remove(ctx.guild.id)
 
-        await ctx.author.voice.channel.connect(timeout=30.0, cls=MiniMaidVoiceClient)
+        await ctx.author.voice.channel.connect(timeout=60.0 * 60.0, cls=MiniMaidVoiceClient)
         self.connecting_guilds.append(ctx.guild.id)
         await ctx.success("接続しました。")
 
