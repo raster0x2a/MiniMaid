@@ -20,6 +20,7 @@ from discord.ext.commands import (
 import discord
 import aiohttp
 from sqlalchemy.exc import IntegrityError
+from pydub import AudioSegment
 
 from lib.context import Context
 from lib.checks import user_connected_only, bot_connected_only, voice_channel_only
@@ -354,7 +355,7 @@ class AudioCommandMixin(AudioBase):
         try:
             await ctx.success("録音開始します...")
             print("Start recording...")
-            max_file_limit = 12  # 1 minute × 12 file
+            max_file_limit = 5  # 1 minute × 5 file
             for file_no in range(1, max_file_limit + 1):
                 print(f"file{file_no}")
                 file, is_continuing = await ctx.voice_client.record(self.invent_mode)
@@ -366,6 +367,8 @@ class AudioCommandMixin(AudioBase):
 
                 if not is_continuing:
                     break
+            
+            
             
 
             """録音データの作成を開始します。"""
