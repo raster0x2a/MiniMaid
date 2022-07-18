@@ -13,7 +13,8 @@ from lib.database.models import (
     VoiceDictionary,
     AudioTag,
     Feed,
-    Reader
+    Reader,
+    RecordedVoice
 )
 
 
@@ -92,3 +93,7 @@ def select_reader_by_id(reader_id: int) -> Select:
 
 def select_reader_by_channel_id(channel_id: int) -> Select:
     return select(Reader).where(Reader.channel_id == channel_id).options(selectinload(Reader.feed))
+
+
+def select_recorded_voice_by_uuid(uuid: str) -> Select:
+    return select(RecordedVoice).where(RecordedVoice.uuid == uuid)
