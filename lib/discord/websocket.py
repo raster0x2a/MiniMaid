@@ -114,7 +114,7 @@ class MiniMaidVoiceWebSocket(DiscordVoiceWebSocket):
         self.is_recording = True
         is_continuing = False
         try:
-            await bot.wait_for("record_stop", timeout=5 * 60 if is_invent else 30)  # 1 file 5 minute
+            await bot.wait_for("record_stop", timeout=3 * 60 if is_invent else 30)  # 1 file 3 minute
         except asyncio.TimeoutError:
             is_continuing = True
         self.ring_buffer.clear()
