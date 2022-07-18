@@ -354,13 +354,13 @@ class AudioCommandMixin(AudioBase):
         try:
             await ctx.success("録音開始します...")
             print("Start recording...")
-            max_file_limit = 12  # 3 minute × 12 file
+            max_file_limit = 12  # 1 minute × 12 file
             for file_no in range(1, max_file_limit + 1):
                 print(f"file{file_no}")
                 file, is_continuing = await ctx.voice_client.record(self.invent_mode)
                 filepath = f"/tmp/recorded_voice_{file_no:03}.mp3"
                 with open(filepath, "wb") as f:
-                    f.write(bytesio_object.getbuffer())
+                    f.write(file.getbuffer())
                 # test
                 await ctx.send(file=discord.File(filepath))
 
