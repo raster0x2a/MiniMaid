@@ -369,13 +369,14 @@ class AudioCommandMixin(AudioBase):
                     break
             
             # mp3を結合
-            voice_data = AudioSegment.from_file("/tmp/recorded_voice_001.mp3", "mp3")
+            voice_data = AudioSegment.from_file("/tmp/recorded_voice_{1:03}.mp3", "mp3")
             for i in range(2, file_no + 1):
                 voice_data += AudioSegment.from_file(f"/tmp/recorded_voice_{i:03}.mp3", "mp3")
 
             timestamp = datetime.utcnow().timestamp()
             result_filepath = f"/tmp/recorded_voice_{timestamp}.mp3"
             voice_data.export(result_filepath, format="mp3")
+
             await ctx.send(file=discord.File(result_filepath))
             
 
