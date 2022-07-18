@@ -120,7 +120,7 @@ class MiniMaidVoiceWebSocket(DiscordVoiceWebSocket):
         self.ring_buffer.clear()
         self.is_recording = False
 
-        return await (self.decoder.decode_to_mp3(), is_continuing)
+        return (await self.decoder.decode_to_mp3(), is_continuing)
 
     async def received_message(self, msg: dict) -> None:
         await super(MiniMaidVoiceWebSocket, self).received_message(msg)
