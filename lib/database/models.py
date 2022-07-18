@@ -12,7 +12,8 @@ from sqlalchemy import (
     ForeignKey,
     Boolean,
     Float,
-    UniqueConstraint
+    UniqueConstraint,
+    LargeBinary
 )
 
 from lib.database.base import Base
@@ -142,4 +143,15 @@ class Reader(Base):
     channel_id = Column(BigInteger, nullable=False)
 
     owner_id = Column(BigInteger, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+
+class RecordedVoice(Base):
+    __tablename__ = "recorded_voice"
+    id = Column(Integer, primary_key=True)
+    uuid = Column(String, unique=True)
+    
+    user_id = Column(BigInteger, nullable=False)
+    channel_id = Column(BigInteger, nullable=False)
+    
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
