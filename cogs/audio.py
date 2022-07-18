@@ -353,7 +353,8 @@ class AudioCommandMixin(AudioBase):
         self.recording_guilds.append(ctx.guild.id)
         try:
             await ctx.success("録音開始します...")
-            max_file_limit = 12  # 5 minute × 12 file = 1 hour
+            print("Start recording...")
+            max_file_limit = 12  # 1 minute × 12 file
             for file_no in range(1, max_file_limit + 1):
                 file, is_continuing = await ctx.voice_client.record(self.invent_mode)
                 filename = f"/tmp/recorded_voice_{file_no:03}.mp3"
