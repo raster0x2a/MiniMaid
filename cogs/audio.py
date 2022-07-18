@@ -353,14 +353,42 @@ class AudioCommandMixin(AudioBase):
         self.recording_guilds.append(ctx.guild.id)
         try:
             await ctx.success("録音開始します...")
-            file = await ctx.voice_client.record(self.invent_mode)
-            if file is None:
-                await ctx.error("エラーが発生しました。もしエラーが再発するようであれば再接続してください。")
-                return
+            max_file_limit = 12  # 5 minute × 12 file = 1 hour
+            for file_no in range(1, max_file_limit + 1):
+                file, is_continuing = await ctx.voice_client.record(self.invent_mode)
+                filename = f"/tmp/recorded_voice_{file_no:03}.mp3"
+                with open(filepath, "wb") as f:
+                    f.write(bytesio_object.getbuffer())
+                # test
+                await ctx.send(file=discord.File(filepath))
+
+                if not is_continuing:
+                    break
+            
+
+            """録音データの作成を開始します。"""
+            """
+            async with self.bot.db.Session() as session:
+                #result = await session.execute(select_party(ctx.guild.id, name))
+                #if result.scalars().first() is not None:
+                #    await ctx.send("その名前のパーティはすでに存在します。", reference=ctx.message)
+                #    await session.rollback()
+                #    return
+                #await session.commit()
+
+                async with session.begin():
+                    recorded_voice = RecordedVoice(uuid=uuid4(), user_id=ctx.author.id, channel_id=ctx.channel.id)
+                    session.add(recorded_voice)
+            #await ctx.send(f"パーティ: `{name}`を作成しました。", reference=ctx.message)
+            """
+
+            #if file is None:
+            #    await ctx.error("エラーが発生しました。もしエラーが再発するようであれば再接続してください。")
+            #    return
             await ctx.success("録音終了しました。")
-            timestamp = datetime.utcnow().timestamp()
-            file.seek(0)
-            await ctx.send(file=discord.File(file, f"{timestamp}.mp3"))
+            #timestamp = datetime.utcnow().timestamp()
+            #file.seek(0)
+            #await ctx.send(file=discord.File(file, f"{timestamp}.mp3"))
         except Exception as e:
             await ctx.error("エラーが発生しました。")
             raise e

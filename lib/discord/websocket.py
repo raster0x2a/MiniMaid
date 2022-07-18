@@ -107,19 +107,20 @@ class MiniMaidVoiceWebSocket(DiscordVoiceWebSocket):
 
         return await self.replay_decoder.decode()
 
-    async def record(self, bot: 'MiniMaid', is_invent: bool = False) -> BytesIO:
+    async def record(self, bot: 'MiniMaid', is_invent: bool = False) -> tuple:  # Tuple[BytesIO, bool]
         self.decoder.clean()
         self.box = nacl.secret.SecretBox(bytes(self._connection.secret_key))
 
         self.is_recording = True
+        is_continuing = False
         try:
-            await bot.wait_for("record_stop", timeout=None if is_invent else 30)
+            await bot.wait_for("record_stop", timeout=5 * 60 if is_invent else 30)  # 1 file 5 minute
         except asyncio.TimeoutError:
-            pass
+            is_continuing = True
         self.ring_buffer.clear()
         self.is_recording = False
 
-        return await self.decoder.decode_to_mp3()
+        return await (self.decoder.decode_to_mp3(), is_continuing)
 
     async def received_message(self, msg: dict) -> None:
         await super(MiniMaidVoiceWebSocket, self).received_message(msg)
