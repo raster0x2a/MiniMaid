@@ -370,7 +370,6 @@ class AudioCommandMixin(AudioBase):
             
             # mp3を結合
             print(f"Start merging mp3 files...", flush=True)
-            print(os.listdir("/tmp"), flush=True)
             voice_data = AudioSegment.from_file("/tmp/recorded_voice_001.mp3", "mp3")
             for i in range(2, file_no + 1):
                 voice_data += AudioSegment.from_file(f"/tmp/recorded_voice_{i:03}.mp3", "mp3")
