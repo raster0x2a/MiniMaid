@@ -354,10 +354,10 @@ class AudioCommandMixin(AudioBase):
         self.recording_guilds.append(ctx.guild.id)
         try:
             await ctx.success("録音開始します...")
-            print("Start recording...")
+            print("Start recording...", flush=True)
             max_file_limit = 5  # 1 minute × 5 file
             for file_no in range(1, max_file_limit + 1):
-                print(f"file{file_no}")
+                print(f"file{file_no}", flush=True)
                 file, is_continuing = await ctx.voice_client.record(self.invent_mode)
                 filepath = f"/tmp/recorded_voice_{file_no:03}.mp3"
                 with open(filepath, "wb") as f:
@@ -369,6 +369,7 @@ class AudioCommandMixin(AudioBase):
                     break
             
             # mp3を結合
+            print(f"Start merging mp3 files...", flush=True)
             voice_data = AudioSegment.from_file("/tmp/recorded_voice_{1:03}.mp3", "mp3")
             for i in range(2, file_no + 1):
                 voice_data += AudioSegment.from_file(f"/tmp/recorded_voice_{i:03}.mp3", "mp3")
